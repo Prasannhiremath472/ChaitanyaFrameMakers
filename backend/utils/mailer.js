@@ -1,0 +1,85 @@
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+
+const transporter = nodemailer.createTransport({
+  host:   process.env.MAIL_HOST || 'smtp.gmail.com',
+  port:   parseInt(process.env.MAIL_PORT) || 587,
+  secure: false,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS,
+  },
+});
+
+const baseStyle = `
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  background: #0a0a0a; color: #fff; padding: 40px 0;
+`;
+const cardStyle = `
+  max-width: 520px; margin: 0 auto;
+  background: linear-gradient(145deg,#1a1a1a,#111);
+  border: 1px solid #C9A84C; border-radius: 16px;
+  overflow: hidden;
+`;
+
+const sendOTP = async (email, otp, purpose = 'login') => {
+  const purposeLabel = purpose === 'register' ? 'Verify Your Account' : 'Login OTP';
+  await transporter.sendMail({
+    from:    process.env.MAIL_FROM || 'Chaitanya FrameMakers <noreply@chaitanyaframes.com>',
+    to:      email,
+    subject: `${purposeLabel} — Chaitanya FrameMakers`,
+    html: `
+<div style="${baseStyle}">
+  <div style="${cardStyle}">
+    <div style="background:linear-gradient(135deg,#C9A84C,#8B6914);padding:32px;text-align:center;">
+      <h1 style="margin:0;font-size:26px;color:#fff;letter-spacing:2px;">✦ Chaitanya FrameMakers</h1>
+      <p style="margin:8px 0 0;color:rgba(255,255,255,.8);font-size:13px;">Premium Photo Frames & Gift Articles</p>
+    </div>
+    <div style="padding:40px 32px;text-align:center;">
+      <h2 style="color:#C9A84C;margin:0 0 8px;font-size:22px;">${purposeLabel}</h2>
+      <p style="color:#ccc;font-size:14px;margin:0 0 32px;">Your one-time password is:</p>
+      <div style="display:inline-block;background:#C9A84C;color:#000;font-size:36px;font-weight:700;
+                  letter-spacing:10px;padding:16px 32px;border-radius:12px;margin-bottom:24px;">
+        ${otp}
+      </div>
+      <p style="color:#888;font-size:13px;margin:0;">This OTP is valid for <strong style="color:#C9A84C;">10 minutes</strong>.</p>
+      <p style="color:#888;font-size:13px;margin:8px 0 0;">Never share this code with anyone.</p>
+    </div>
+    <div style="background:#111;padding:20px;text-align:center;border-top:1px solid #333;">
+      <p style="color:#555;font-size:12px;margin:0;">© 2026 Chaitanya FrameMakers. All rights reserved.</p>
+    </div>
+  </div>
+</div>`,
+  });
+};
+
+const sendOrderConfirmation = async (email, order) => {
+  await transporter.sendMail({
+    from:    process.env.MAIL_FROM,
+    to:      email,
+    subject: `Order Confirmed #${order.order_number} — Chaitanya FrameMakers`,
+    html: `
+<div style="${baseStyle}">
+  <div style="${cardStyle}">
+    <div style="background:linear-gradient(135deg,#C9A84C,#8B6914);padding:32px;text-align:center;">
+      <h1 style="margin:0;font-size:24px;color:#fff;">✦ Order Confirmed!</h1>
+    </div>
+    <div style="padding:32px;">
+      <p style="color:#ccc;font-size:15px;">Thank you for your order. We're preparing your beautiful frames!</p>
+      <div style="background:#1a1a1a;border:1px solid #333;border-radius:10px;padding:20px;margin:20px 0;">
+        <p style="margin:0 0 8px;color:#C9A84C;font-weight:600;">Order Details</p>
+        <p style="margin:4px 0;color:#ccc;font-size:14px;">Order No: <strong style="color:#fff;">#${order.order_number}</strong></p>
+        <p style="margin:4px 0;color:#ccc;font-size:14px;">Total: <strong style="color:#C9A84C;">₹${order.total}</strong></p>
+        <p style="margin:4px 0;color:#ccc;font-size:14px;">Status: <strong style="color:#4ade80;">Confirmed</strong></p>
+      </div>
+      <p style="color:#888;font-size:13px;">We'll notify you when your order ships. Estimated delivery: 5-7 business days.</p>
+    </div>
+    <div style="background:#111;padding:20px;text-align:center;border-top:1px solid #333;">
+      <p style="color:#555;font-size:12px;margin:0;">© 2026 Chaitanya FrameMakers</p>
+    </div>
+  </div>
+</div>`,
+  });
+};
+
+module.exports = { sendOTP, sendOrderConfirmation };
