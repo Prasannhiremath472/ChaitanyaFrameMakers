@@ -22,6 +22,9 @@ api.interceptors.response.use(
       localStorage.removeItem('cfm_token');
       localStorage.removeItem('cfm_user');
       window.location.href = '/login';
+    } else if (err.code === 'ERR_NETWORK' || err.code === 'ECONNREFUSED') {
+      // Backend not running — silently fail, components handle empty state
+      console.warn('API unreachable — running in offline mode');
     } else if (err.response?.status !== 404) {
       toast.error(msg);
     }
@@ -113,5 +116,6 @@ export const getAdminOffers   = ()       => api.get('/admin/offers');
 export const createOffer      = (data)   => api.post('/admin/offers', data, { headers: { 'Content-Type': 'multipart/form-data' } });
 export const getSubscribers   = ()       => api.get('/admin/subscribers');
 export const getMessages      = ()       => api.get('/admin/messages');
+export const markMessageRead  = (id)     => api.put(`/admin/messages/${id}/read`);
 
 export default api;

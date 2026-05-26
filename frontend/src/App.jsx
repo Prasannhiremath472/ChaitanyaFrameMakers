@@ -30,10 +30,11 @@ const Analytics     = lazy(() => import('./pages/admin/Analytics'));
 const AdminOffers   = lazy(() => import('./pages/admin/Offers'));
 
 const Loader = () => (
-  <div className="min-h-screen bg-dark-950 flex items-center justify-center">
+  <div className="min-h-screen flex items-center justify-center" style={{ background: '#fff' }}>
     <div className="text-center">
-      <div className="w-16 h-16 border-4 border-gold-500/20 border-t-gold-500 rounded-full animate-spin mx-auto mb-4" />
-      <p className="text-gold-400 font-display text-lg">Loading…</p>
+      <div className="w-14 h-14 rounded-full animate-spin mx-auto mb-4"
+        style={{ border: '3px solid #f0f0f0', borderTopColor: '#CC0000' }} />
+      <p className="font-display text-base font-semibold" style={{ color: '#CC0000' }}>Loading…</p>
     </div>
   </div>
 );

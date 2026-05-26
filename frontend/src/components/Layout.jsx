@@ -6,7 +6,7 @@ import Footer from './Footer';
 export default function Layout() {
   const location = useLocation();
   return (
-    <div className="min-h-screen bg-dark-950 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: '#fff' }}>
       <Navbar />
       <motion.main
         key={location.pathname}

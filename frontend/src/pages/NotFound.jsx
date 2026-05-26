@@ -18,19 +18,19 @@ export default function NotFound() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="font-display text-7xl font-bold gold-text mb-4"
+            className="font-display text-7xl font-bold brand-text mb-4"
           >404</motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="text-white text-xl font-semibold mb-3"
+            className="text-xl font-semibold mb-3" style={{ color: '#1a0000' }}
           >This page got lost in the frame</motion.p>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            className="text-dark-400 mb-10"
+            className="mb-10" style={{ color: '#888888' }}
           >The page you're looking for doesn't exist or has been moved.</motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -38,7 +38,7 @@ export default function NotFound() {
             transition={{ delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-4 justify-center"
           >
-            <Link to="/" className="btn-gold px-8 py-4">← Go Home</Link>
+            <Link to="/" className="btn-brand px-8 py-4">← Go Home</Link>
             <Link to="/products" className="btn-outline px-8 py-4">Browse Products</Link>
           </motion.div>
         </div>

@@ -13,7 +13,6 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const { setAuth }  = useAuthStore();
   const navigate     = useNavigate();
-
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
   const handleRegister = async (e) => {
@@ -42,77 +41,108 @@ export default function Register() {
   return (
     <>
       <Helmet><title>Create Account — Chaitanya FrameMakers</title></Helmet>
-      <div className="min-h-screen flex items-center justify-center py-20 px-4">
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl" />
-        </div>
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md"
-        >
-          <div className="glass-card p-8 md:p-10">
-            <div className="text-center mb-8">
-              <div className="w-16 h-16 bg-gold-gradient rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-gold">
-                <span className="text-black text-3xl">✦</span>
+      <div className="min-h-screen grid lg:grid-cols-2" style={{ background: '#fff' }}>
+
+        {/* Left panel */}
+        <div className="hidden lg:flex relative overflow-hidden"
+          style={{ background: 'linear-gradient(135deg, #8B0000, #CC0000)' }}>
+          <img src="https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=900&q=85"
+            alt="" className="absolute inset-0 w-full h-full object-cover mix-blend-overlay opacity-30" />
+          <div className="relative z-10 flex flex-col justify-between p-12 h-full">
+            <Link to="/" className="flex items-center gap-3">
+              <img src="/logo.jpg" alt="" className="w-12 h-12 object-contain rounded-xl"
+                style={{ boxShadow: '0 4px 16px rgba(0,0,0,0.3)' }} />
+              <div>
+                <p className="font-display text-lg font-bold text-white leading-none">Chaitanya</p>
+                <p className="font-display text-lg font-bold leading-none" style={{ color: 'rgba(255,255,255,0.8)' }}>FrameMakers</p>
               </div>
-              <h1 className="font-display text-3xl font-bold text-white">
+            </Link>
+            <div>
+              <h2 className="font-display text-4xl font-bold text-white leading-tight mb-6">
+                Join 50,000+<br />Happy Customers
+              </h2>
+              <div className="flex flex-col gap-3">
+                {['Exclusive member discounts', 'Order tracking & history', 'Personalised recommendations', 'Early access to new products'].map(t => (
+                  <div key={t} className="flex items-center gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center"
+                      style={{ background: 'rgba(255,255,255,0.2)' }}>
+                      <span className="text-white text-xs">✓</span>
+                    </div>
+                    <span className="text-white/80 text-sm">{t}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Right – Form */}
+        <div className="flex items-center justify-center py-16 px-6">
+          <motion.div initial={{ opacity: 0, x: 30 }} animate={{ opacity: 1, x: 0 }}
+            className="w-full max-w-md">
+
+            <div className="text-center mb-8">
+              <div className="flex justify-center mb-5 lg:hidden">
+                <img src="/logo.jpg" alt="" className="w-16 h-16 object-contain rounded-2xl"
+                  style={{ boxShadow: '0 4px 20px rgba(139,0,0,0.2)' }} />
+              </div>
+              <h1 className="font-display text-3xl font-bold mb-2" style={{ color: '#1a0000' }}>
                 {step === 0 ? 'Create Account' : 'Verify Email'}
               </h1>
-              <p className="text-dark-400 mt-2 text-sm">
-                {step === 0 ? 'Join thousands of happy customers' : `OTP sent to ${form.email}`}
+              <p className="text-sm" style={{ color: '#888' }}>
+                {step === 0 ? 'Join thousands of happy customers' : `Enter the OTP sent to ${form.email}`}
               </p>
             </div>
 
             {step === 0 ? (
               <form onSubmit={handleRegister} className="space-y-4">
                 <div>
-                  <label className="text-dark-300 text-sm mb-1.5 block">Full Name *</label>
+                  <label className="text-sm font-medium mb-1.5 block" style={{ color: '#444' }}>Full Name *</label>
                   <input value={form.name} onChange={e => set('name', e.target.value)}
                     placeholder="Your full name" className="input-field" required autoFocus />
                 </div>
                 <div>
-                  <label className="text-dark-300 text-sm mb-1.5 block">Email Address *</label>
+                  <label className="text-sm font-medium mb-1.5 block" style={{ color: '#444' }}>Email Address *</label>
                   <input type="email" value={form.email} onChange={e => set('email', e.target.value)}
                     placeholder="you@example.com" className="input-field" required />
                 </div>
                 <div>
-                  <label className="text-dark-300 text-sm mb-1.5 block">Phone Number</label>
+                  <label className="text-sm font-medium mb-1.5 block" style={{ color: '#444' }}>Phone Number</label>
                   <input value={form.phone} onChange={e => set('phone', e.target.value)}
                     placeholder="10-digit mobile number" className="input-field" />
                 </div>
                 <div>
-                  <label className="text-dark-300 text-sm mb-1.5 block">Password *</label>
+                  <label className="text-sm font-medium mb-1.5 block" style={{ color: '#444' }}>Password *</label>
                   <input type="password" value={form.password} onChange={e => set('password', e.target.value)}
                     placeholder="Minimum 8 characters" className="input-field" required minLength={8} />
                 </div>
                 <button type="submit" disabled={loading}
-                  className="btn-gold w-full py-3.5 justify-center text-base disabled:opacity-60 mt-2">
+                  className="btn-brand w-full py-3.5 justify-center text-base disabled:opacity-60 mt-2">
                   {loading ? '⏳ Creating account…' : '🚀 Create Account'}
                 </button>
               </form>
             ) : (
               <form onSubmit={handleVerify} className="space-y-5">
                 <div>
-                  <label className="text-dark-300 text-sm mb-2 block">Enter 6-digit OTP</label>
+                  <label className="text-sm font-medium mb-2 block" style={{ color: '#444' }}>6-digit OTP</label>
                   <input value={otp} onChange={e => setOtp(e.target.value)}
                     placeholder="000000"
                     className="input-field text-center text-2xl tracking-[0.5em] font-bold"
                     maxLength={6} autoFocus required />
                 </div>
                 <button type="submit" disabled={loading}
-                  className="btn-gold w-full py-3.5 justify-center text-base disabled:opacity-60">
+                  className="btn-brand w-full py-3.5 justify-center text-base disabled:opacity-60">
                   {loading ? '⏳ Verifying…' : '✓ Verify & Continue'}
                 </button>
               </form>
             )}
 
-            <p className="text-center text-dark-400 text-sm mt-8">
+            <p className="text-center text-sm mt-8" style={{ color: '#888' }}>
               Already have an account?{' '}
-              <Link to="/login" className="text-gold-400 hover:text-gold-300 font-semibold">Sign in →</Link>
+              <Link to="/login" className="font-semibold" style={{ color: '#CC0000' }}>Sign in →</Link>
             </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </>
   );

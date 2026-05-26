@@ -16,8 +16,10 @@ export const getDiscount = (price, salePrice) =>
 
 export const getImageUrl = (path) => {
   if (!path) return '/placeholder.jpg';
-  if (path.startsWith('http')) return path;
-  return `${import.meta.env.VITE_API_URL?.replace('/api', '') || ''}${path}`;
+  // Already a full URL (http/https) or a Vite-bundled asset path (starts with /)
+  if (path.startsWith('http') || path.startsWith('/') || path.startsWith('data:') || path.startsWith('blob:')) return path;
+  // Relative backend path — prepend API host
+  return `${import.meta.env.VITE_API_URL?.replace('/api', '') || ''}/${path}`;
 };
 
 export const starArray = (rating) =>

@@ -40,169 +40,190 @@ export default function Cart() {
   };
 
   if (items.length === 0) return (
-    <div className="min-h-[70vh] flex items-center justify-center">
+    <div className="min-h-[70vh] flex items-center justify-center" style={{ background: '#fff' }}>
       <div className="text-center max-w-md px-6">
-        <motion.div
-          initial={{ scale: 0 }} animate={{ scale: 1 }}
+        <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}
           transition={{ type: 'spring', bounce: 0.5 }}
-          className="text-8xl mb-6"
-        >🛒</motion.div>
-        <h2 className="font-display text-3xl font-bold text-white mb-3">Your Cart is Empty</h2>
-        <p className="text-dark-400 mb-8">Looks like you haven't added any frames yet. Let's find something beautiful!</p>
-        <Link to="/products" className="btn-gold text-base px-8">Browse Products</Link>
+          className="text-8xl mb-6">🛒</motion.div>
+        <h2 className="font-display text-3xl font-bold mb-3" style={{ color: '#1a0000' }}>
+          Your Cart is Empty
+        </h2>
+        <p className="mb-8 text-sm leading-relaxed" style={{ color: '#888' }}>
+          Looks like you haven't added any frames yet. Let's find something beautiful for you!
+        </p>
+        <Link to="/products" className="btn-brand text-base px-8">Browse Products →</Link>
       </div>
     </div>
   );
 
   return (
     <>
-      <Helmet>
-        <title>My Cart — Chaitanya FrameMakers</title>
-      </Helmet>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-        <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-          className="section-title mb-10">
-          My <span className="gold-text">Cart</span>
-          <span className="ml-3 text-lg text-dark-400 font-sans font-normal">({items.length} items)</span>
-        </motion.h1>
+      <Helmet><title>My Cart — Chaitanya FrameMakers</title></Helmet>
+      <div style={{ background: '#fafafa', minHeight: '100vh' }}>
+        {/* Header */}
+        <div style={{ background: 'linear-gradient(135deg, #8B0000 0%, #CC0000 100%)' }} className="py-12 px-6 text-center">
+          <p className="text-xs font-bold tracking-widest uppercase mb-2" style={{ color: 'rgba(255,255,255,0.65)' }}>Shopping</p>
+          <motion.h1 initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            className="font-display text-4xl font-bold text-white">
+            My Cart{' '}
+            <span className="text-xl font-sans font-normal" style={{ color: 'rgba(255,255,255,0.7)' }}>
+              ({items.length} {items.length === 1 ? 'item' : 'items'})
+            </span>
+          </motion.h1>
+        </div>
 
-        <div className="grid lg:grid-cols-3 gap-10">
-          {/* Items */}
-          <div className="lg:col-span-2 space-y-4">
-            <AnimatePresence>
-              {items.map(item => (
-                <motion.div
-                  key={item.id}
-                  layout
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20, height: 0 }}
-                  className="card-dark p-5 flex gap-5"
-                >
-                  <Link to={`/products/${item.slug}`} className="shrink-0">
-                    <img
-                      src={getImageUrl(item.image)}
-                      alt={item.name}
-                      className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-xl hover:opacity-90 transition-opacity"
-                    />
-                  </Link>
-                  <div className="flex-1 min-w-0">
-                    <Link to={`/products/${item.slug}`}
-                      className="text-white font-semibold hover:text-gold-400 transition-colors line-clamp-2 block mb-1">
-                      {item.name}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Cart Items */}
+            <div className="lg:col-span-2 space-y-4">
+              <AnimatePresence>
+                {items.map(item => (
+                  <motion.div key={item.id} layout
+                    initial={{ opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, x: -20, height: 0 }}
+                    className="rounded-2xl p-5 flex gap-5"
+                    style={{ background: '#fff', border: '1.5px solid #f0f0f0', boxShadow: '0 2px 12px rgba(0,0,0,0.04)' }}>
+
+                    <Link to={`/products/${item.slug}`} className="shrink-0">
+                      <img src={getImageUrl(item.image)} alt={item.name}
+                        className="w-24 h-24 md:w-28 md:h-28 object-cover rounded-xl transition-opacity hover:opacity-90"
+                        style={{ border: '1px solid #f0f0f0' }} />
                     </Link>
-                    <p className="text-gold-500 font-bold text-lg mb-3">
-                      {formatPrice(item.sale_price || item.price)}
-                    </p>
-                    {item.customization && (
-                      <p className="text-dark-400 text-xs mb-3">Customized ✓</p>
-                    )}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center border border-dark-700 rounded-xl overflow-hidden">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                          className="px-3 py-2 text-white hover:bg-white/10 transition-colors">−</button>
-                        <span className="px-4 py-2 text-white font-semibold border-x border-dark-700">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                          className="px-3 py-2 text-white hover:bg-white/10 transition-colors">+</button>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <span className="text-white font-bold">
-                          {formatPrice((item.sale_price || item.price) * item.quantity)}
-                        </span>
-                        <button onClick={() => removeItem(item.id)}
-                          className="text-dark-500 hover:text-red-400 transition-colors text-xl" aria-label="Remove">
-                          ✕
-                        </button>
+
+                    <div className="flex-1 min-w-0">
+                      <Link to={`/products/${item.slug}`}
+                        className="font-semibold text-sm leading-snug line-clamp-2 block mb-1 transition-colors hover:text-red-700"
+                        style={{ color: '#1a0000' }}>
+                        {item.name}
+                      </Link>
+                      <p className="font-bold text-base mb-3" style={{ color: '#CC0000' }}>
+                        {formatPrice(item.sale_price || item.price)}
+                      </p>
+                      {item.customization && (
+                        <p className="text-xs mb-3" style={{ color: '#16a34a' }}>✓ Customized</p>
+                      )}
+                      <div className="flex items-center justify-between flex-wrap gap-3">
+                        {/* Qty stepper */}
+                        <div className="flex items-center rounded-xl overflow-hidden"
+                          style={{ border: '1.5px solid #ebebeb' }}>
+                          <button onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                            className="w-9 h-9 flex items-center justify-center transition-colors hover:bg-gray-50 text-lg font-medium"
+                            style={{ color: '#555' }}>−</button>
+                          <span className="w-10 text-center font-bold text-sm"
+                            style={{ color: '#1a0000', borderLeft: '1px solid #ebebeb', borderRight: '1px solid #ebebeb', lineHeight: '36px' }}>
+                            {item.quantity}
+                          </span>
+                          <button onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                            className="w-9 h-9 flex items-center justify-center transition-colors hover:bg-gray-50 text-lg font-medium"
+                            style={{ color: '#555' }}>+</button>
+                        </div>
+
+                        <div className="flex items-center gap-4">
+                          <span className="font-bold text-base" style={{ color: '#1a0000' }}>
+                            {formatPrice((item.sale_price || item.price) * item.quantity)}
+                          </span>
+                          <button onClick={() => removeItem(item.id)}
+                            className="w-8 h-8 rounded-full flex items-center justify-center transition-colors hover:bg-red-50"
+                            style={{ color: '#ccc' }}
+                            onMouseEnter={e => e.currentTarget.style.color = '#ef4444'}
+                            onMouseLeave={e => e.currentTarget.style.color = '#ccc'}
+                            aria-label="Remove item">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
                       </div>
                     </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {/* Order Summary */}
+            <div>
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+                className="rounded-2xl p-6 sticky top-24"
+                style={{ background: '#fff', border: '1.5px solid #f0f0f0', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
+
+                <h2 className="font-display text-xl font-bold mb-6" style={{ color: '#1a0000' }}>Order Summary</h2>
+
+                <div className="space-y-3 text-sm mb-6">
+                  <div className="flex justify-between" style={{ color: '#666' }}>
+                    <span>Subtotal ({items.length} items)</span>
+                    <span>{formatPrice(subtotal)}</span>
                   </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-          </div>
-
-          {/* Order Summary */}
-          <div className="space-y-4">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="card-dark p-6 sticky top-24"
-            >
-              <h2 className="font-display text-xl font-bold text-white mb-6">Order Summary</h2>
-
-              <div className="space-y-3 text-sm mb-6">
-                <div className="flex justify-between text-dark-300">
-                  <span>Subtotal ({items.length} items)</span>
-                  <span>{formatPrice(subtotal)}</span>
+                  {discount > 0 && (
+                    <div className="flex justify-between" style={{ color: '#16a34a' }}>
+                      <span>Coupon ({coupon?.code})</span>
+                      <span>−{formatPrice(discount)}</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between" style={{ color: '#666' }}>
+                    <span>Shipping</span>
+                    <span style={{ color: shipping === 0 ? '#16a34a' : '#1a0000', fontWeight: shipping === 0 ? 700 : 400 }}>
+                      {shipping === 0 ? 'FREE' : formatPrice(shipping)}
+                    </span>
+                  </div>
+                  {shipping > 0 && (
+                    <p className="text-xs px-3 py-2 rounded-lg" style={{ background: 'rgba(204,0,0,0.06)', color: '#CC0000' }}>
+                      Add {formatPrice(999 - subtotal + discount)} more for free shipping
+                    </p>
+                  )}
+                  <div className="pt-3 flex justify-between font-bold text-lg"
+                    style={{ borderTop: '1.5px solid #f0f0f0', color: '#1a0000' }}>
+                    <span>Total</span>
+                    <span style={{ color: '#CC0000' }}>{formatPrice(total)}</span>
+                  </div>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-green-400">
-                    <span>Coupon Discount ({coupon?.code})</span>
-                    <span>−{formatPrice(discount)}</span>
+
+                {/* Coupon */}
+                {!coupon ? (
+                  <div className="flex gap-2 mb-5">
+                    <input value={couponCode}
+                      onChange={e => setCouponCode(e.target.value.toUpperCase())}
+                      placeholder="Coupon code"
+                      className="input-field flex-1 py-2.5 text-sm"
+                      onKeyDown={e => e.key === 'Enter' && handleCoupon()} />
+                    <button onClick={handleCoupon} disabled={validating}
+                      className="btn-outline py-2.5 px-4 text-sm disabled:opacity-60 whitespace-nowrap">
+                      {validating ? '…' : 'Apply'}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between rounded-xl px-4 py-3 mb-5"
+                    style={{ background: 'rgba(22,163,74,0.07)', border: '1px solid rgba(22,163,74,0.2)' }}>
+                    <div>
+                      <p className="font-semibold text-sm" style={{ color: '#16a34a' }}>{coupon.code}</p>
+                      <p className="text-xs" style={{ color: '#16a34a', opacity: 0.7 }}>Discount applied ✓</p>
+                    </div>
+                    <button onClick={removeCoupon} className="text-sm transition-colors hover:text-red-500" style={{ color: '#aaa' }}>✕</button>
                   </div>
                 )}
-                <div className="flex justify-between text-dark-300">
-                  <span>Shipping</span>
-                  <span className={shipping === 0 ? 'text-green-400' : ''}>{shipping === 0 ? 'FREE' : formatPrice(shipping)}</span>
-                </div>
-                {shipping > 0 && (
-                  <p className="text-xs text-dark-500">Add {formatPrice(999 - subtotal + discount)} more for free shipping</p>
-                )}
-                <div className="border-t border-dark-800 pt-3 flex justify-between text-white font-bold text-lg">
-                  <span>Total</span>
-                  <span className="gold-text">{formatPrice(total)}</span>
-                </div>
-              </div>
 
-              {/* Coupon */}
-              {!coupon ? (
-                <div className="flex gap-2 mb-6">
-                  <input
-                    value={couponCode}
-                    onChange={e => setCouponCode(e.target.value.toUpperCase())}
-                    placeholder="Coupon code"
-                    className="input-field flex-1 py-2.5 text-sm"
-                    onKeyDown={e => e.key === 'Enter' && handleCoupon()}
-                  />
-                  <button onClick={handleCoupon} disabled={validating}
-                    className="btn-outline py-2.5 px-4 text-sm disabled:opacity-60 whitespace-nowrap">
-                    {validating ? '…' : 'Apply'}
-                  </button>
+                <motion.button whileTap={{ scale: 0.97 }} onClick={handleCheckout}
+                  className="btn-brand w-full py-4 text-base justify-center">
+                  Proceed to Checkout →
+                </motion.button>
+
+                <div className="mt-4 flex items-center justify-center gap-2 text-xs" style={{ color: '#bbb' }}>
+                  <span>🔒</span>
+                  <span>100% Secure Checkout — Razorpay</span>
                 </div>
-              ) : (
-                <div className="flex items-center justify-between bg-green-500/10 border border-green-500/20 rounded-xl px-4 py-3 mb-6">
-                  <div>
-                    <p className="text-green-400 font-semibold text-sm">{coupon.code}</p>
-                    <p className="text-green-400/70 text-xs">Discount applied!</p>
+
+                {/* Sample coupons hint */}
+                <div className="mt-5 rounded-xl p-4" style={{ background: '#fafafa', border: '1px solid #f0f0f0' }}>
+                  <p className="text-xs font-bold mb-2" style={{ color: '#CC0000' }}>💡 Available Offers</p>
+                  <div className="space-y-1.5">
+                    {['WELCOME10 — 10% off (new users)', 'FLAT200 — ₹200 off above ₹999', 'LOVE25 — 25% off couple gifts'].map(c => (
+                      <p key={c} className="text-xs" style={{ color: '#999' }}>{c}</p>
+                    ))}
                   </div>
-                  <button onClick={removeCoupon} className="text-dark-500 hover:text-red-400 transition-colors">✕</button>
                 </div>
-              )}
-
-              <motion.button
-                whileTap={{ scale: 0.97 }}
-                onClick={handleCheckout}
-                className="btn-gold w-full py-4 text-base justify-center"
-              >
-                Proceed to Checkout →
-              </motion.button>
-
-              <div className="mt-4 flex items-center justify-center gap-2 text-dark-500 text-xs">
-                <span>🔒</span>
-                <span>Secured by Razorpay</span>
-              </div>
-
-              {/* Offers reminder */}
-              <div className="mt-4 bg-gold-500/10 border border-gold-500/20 rounded-xl p-3">
-                <p className="text-gold-400 text-xs font-semibold mb-1">💡 Available Coupons</p>
-                <div className="space-y-1">
-                  {['WELCOME10 — 10% off for new users', 'FLAT200 — ₹200 off above ₹999', 'LOVE25 — 25% off couple gifts'].map(c => (
-                    <p key={c} className="text-dark-400 text-xs">{c}</p>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>
